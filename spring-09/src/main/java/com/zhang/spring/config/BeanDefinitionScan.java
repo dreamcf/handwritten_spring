@@ -23,11 +23,7 @@ public class BeanDefinitionScan extends BeanDefinitionFactory {
         classLoader = BeanDefinitionScan.class.getClassLoader();
         scan(configClass);
 
-//        for (Map.Entry<String, BeanDefinition> BeanDefinitionEntryMap : super.getBeanDefinitionMap().entrySet()) {
-//            if (BeanDefinitionEntryMap.getValue().getScope()!=null && BeanDefinitionEntryMap.getValue().getScope().equals("singleton") && !SingletonBeanFactory.hasSingletonMap(BeanDefinitionEntryMap.getKey())){
-//                createSingleton(BeanDefinitionEntryMap.getKey(),BeanDefinitionEntryMap.getValue());
-//            }
-//        }
+
     }
 
     private void scan(Class configClass) throws IOException {
