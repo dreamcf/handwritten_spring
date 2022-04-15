@@ -19,7 +19,7 @@ public class App {
         BeanDefinitionFactory beanDefinitionFactory = new BeanDefinitionScan(App.class);
         UserServiceImpl userServiceImpl = (UserServiceImpl) beanDefinitionFactory.getBean("UserServiceImpl");
         UserTest userTest = (UserTest) beanDefinitionFactory.getBean("UserTest");
-        User user = (User) beanDefinitionFactory.getBean("User");
+        User users = (User) beanDefinitionFactory.getBean("User");
         userServiceImpl.todo();
         userTest.test();
     }
