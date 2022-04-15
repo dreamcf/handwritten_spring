@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptSettings">
+    <option name="languageLevel" value="ES6" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/spring-01/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-02/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-03/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-04/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-05/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-06/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-07/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-08/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-09/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="1.8 (1)" project-jdk-type="JavaSDK" />
+</project>

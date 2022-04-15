@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/handwritten_spring.iml" filepath="$PROJECT_DIR$/.idea/handwritten_spring.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Desktop/small-spring/spring-01.iml" filepath="$PROJECT_DIR$/../Desktop/small-spring/spring-01.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Desktop/small-spring/spring-02.iml" filepath="$PROJECT_DIR$/../Desktop/small-spring/spring-02.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Desktop/small-spring/spring-03.iml" filepath="$PROJECT_DIR$/../Desktop/small-spring/spring-03.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Desktop/small-spring/spring-04.iml" filepath="$PROJECT_DIR$/../Desktop/small-spring/spring-04.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Desktop/small-spring/spring-05.iml" filepath="$PROJECT_DIR$/../Desktop/small-spring/spring-05.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Desktop/small-spring/spring-06.iml" filepath="$PROJECT_DIR$/../Desktop/small-spring/spring-06.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Desktop/small-spring/spring-07.iml" filepath="$PROJECT_DIR$/../Desktop/small-spring/spring-07.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Desktop/small-spring/spring-08.iml" filepath="$PROJECT_DIR$/../Desktop/small-spring/spring-08.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Desktop/small-spring/spring-09.iml" filepath="$PROJECT_DIR$/../Desktop/small-spring/spring-09.iml" />
+    </modules>
+  </component>
+</project>

@@ -53,7 +53,7 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
                 declaredField.setAccessible(true);
                 declaredField.set(bean, autowiredBean);
                 removeSingletonFactories(beanName);//删除三级缓存
-                registerEarlySingletonObjects(beanName, autowiredBean);//放入二级缓存
+                registerEarlySingletonObjects(beanName, bean);//放入二级缓存
             }
         }
 
