@@ -6,9 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="spring-07" />
         <module name="spring-09" />
         <module name="spring-08" />
+        <module name="spring-07" />
         <module name="spring-06" />
         <module name="spring-05" />
         <module name="spring-04" />
