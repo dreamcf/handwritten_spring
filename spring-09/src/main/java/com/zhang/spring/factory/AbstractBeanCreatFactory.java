@@ -16,13 +16,11 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
         Object bean = beanDefinition.getBeanClass().newInstance();
         ProxyObjectFactory proxyObjectFactory = new ProxyObjectFactory(beanName, bean);
         Object finalBean = bean;
-        bean = proxyObjectFactory.getProxyObject();
-        registerSingletonFactories(beanName, proxyObjectFactory);
+        registerSingletonFactories(beanName, proxyObjectFactory);//放入三级缓存
         //依赖注入
         diScan(beanName, finalBean);
-
         // Aware 回调
-        if (bean instanceof BeanNameAware) {
+        if (finalBean instanceof BeanNameAware) {
             ((BeanNameAware) finalBean).setBeanName(beanDefinition.getBeanClass().getSimpleName());
         }
         List<BeanPostProcessor> beanPostProcessorList = getBeanPostProcessorList();
@@ -31,7 +29,7 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
             finalBean = beanPostProcessor.postProcessBeforeInitialization(finalBean, beanName);
         }
         // InitializeBean初始化
-        if (bean instanceof InitializingBean) {
+        if (finalBean instanceof InitializingBean) {
             ((InitializingBean) finalBean).afterPropertiesSet();
         }
         // BeanPostProcessList后置处理器
@@ -39,6 +37,7 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
             finalBean = beanPostProcessor.postProcessAfterInitialization(finalBean, beanName);
         }
         removeEarlySingletonObjects(beanName);//删除二级缓存
+        bean = proxyObjectFactory.getProxyObject();
         if (beanDefinition.getScope() != null && beanDefinition.getScope().equals("singleton")) {
             registerSingletonBean(beanName, bean);
         }
@@ -52,10 +51,10 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
                 Object autowiredBean = getBean(autowiredBeanName.substring(autowiredBeanName.lastIndexOf(".") + 1));
                 declaredField.setAccessible(true);
                 declaredField.set(bean, autowiredBean);
-                removeSingletonFactories(beanName);//删除三级缓存
-                registerEarlySingletonObjects(beanName, bean);//放入二级缓存
             }
         }
+        removeSingletonFactories(beanName);//删除三级缓存
+        registerEarlySingletonObjects(beanName, bean);//放入二级缓存
 
     }
 
