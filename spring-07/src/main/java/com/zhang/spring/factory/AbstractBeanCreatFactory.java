@@ -39,16 +39,16 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
     }
 
     private void diScan(String beanName, Object bean) throws Exception {
+        registerEarlySingletonObjects(beanName, bean);//放入二级缓存
         for (Field declaredField : bean.getClass().getDeclaredFields()) {
             if (declaredField.isAnnotationPresent(Autowired.class)) {
-                registerEarlySingletonObjects(beanName, bean);//放入二级缓存
                 String autowiredBeanName = declaredField.getType().toString();
                 Object autowiredBean = getBean(autowiredBeanName.substring(autowiredBeanName.lastIndexOf(".") + 1));
                 declaredField.setAccessible(true);
                 declaredField.set(bean, autowiredBean);
-                removeEarlySingletonObjects(beanName);//删除二级缓存
             }
         }
+        removeEarlySingletonObjects(beanName);//删除二级缓存
     }
 
     @Override
