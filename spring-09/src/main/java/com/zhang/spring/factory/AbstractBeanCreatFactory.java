@@ -15,29 +15,28 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
     protected Object createSingleton(String beanName, BeanDefinition beanDefinition) throws Exception {
         Object bean = beanDefinition.getBeanClass().newInstance();
         ProxyObjectFactory proxyObjectFactory = new ProxyObjectFactory(beanName, bean);
-        Object finalBean = bean;
         registerSingletonFactories(beanName, proxyObjectFactory);//放入三级缓存
         //依赖注入
-        diScan(beanName, finalBean);
+        diScan(beanName, bean);
         // Aware 回调
-        if (finalBean instanceof BeanNameAware) {
-            ((BeanNameAware) finalBean).setBeanName(beanDefinition.getBeanClass().getSimpleName());
+        if (bean instanceof BeanNameAware) {
+            ((BeanNameAware) bean).setBeanName(beanDefinition.getBeanClass().getSimpleName());
         }
         List<BeanPostProcessor> beanPostProcessorList = getBeanPostProcessorList();
         // BeanPostProcessList前置处理器
         for (BeanPostProcessor beanPostProcessor : beanPostProcessorList) {
-            finalBean = beanPostProcessor.postProcessBeforeInitialization(finalBean, beanName);
+            bean = beanPostProcessor.postProcessBeforeInitialization(bean, beanName);
         }
         // InitializeBean初始化
-        if (finalBean instanceof InitializingBean) {
-            ((InitializingBean) finalBean).afterPropertiesSet();
+        if (bean instanceof InitializingBean) {
+            ((InitializingBean) bean).afterPropertiesSet();
         }
         // BeanPostProcessList后置处理器
         for (BeanPostProcessor beanPostProcessor : beanPostProcessorList) {
-            finalBean = beanPostProcessor.postProcessAfterInitialization(finalBean, beanName);
+            bean = beanPostProcessor.postProcessAfterInitialization(bean, beanName);
         }
         removeEarlySingletonObjects(beanName);//删除二级缓存
-        bean = proxyObjectFactory.getProxyObject();
+        bean = proxyObjectFactory.getBean();
         if (beanDefinition.getScope() != null && beanDefinition.getScope().equals("singleton")) {
             registerSingletonBean(beanName, bean);
         }
@@ -51,10 +50,13 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
                 Object autowiredBean = getBean(autowiredBeanName.substring(autowiredBeanName.lastIndexOf(".") + 1));
                 declaredField.setAccessible(true);
                 declaredField.set(bean, autowiredBean);
+//                removeSingletonFactories(autowiredBeanName.substring(autowiredBeanName.lastIndexOf('.')+1));//删除三级缓存
+                registerEarlySingletonObjects(autowiredBeanName.substring(autowiredBeanName.lastIndexOf('.')+1), autowiredBean);//放入二级缓存
             }
         }
-        removeSingletonFactories(beanName);//删除三级缓存
+//        removeSingletonFactories(beanName);//删除三级缓存
         registerEarlySingletonObjects(beanName, bean);//放入二级缓存
+
 
     }
 

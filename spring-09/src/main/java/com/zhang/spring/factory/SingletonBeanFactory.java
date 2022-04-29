@@ -6,14 +6,18 @@ import java.util.Map;
 
 public class SingletonBeanFactory {
     //一级缓存
-    private static Map<String, Object> singletonMap = new HashMap<>();
+    private static final Map<String, Object> singletonMap = new HashMap<>();
     //二级缓存
     private static Map<String, Object> earlySingletonObjects = new HashMap<>();
     //三级缓存
     private static Map<String, ProxyObjectFactory> singletonFactories = new HashMap<>();
 
     void registerSingletonBean(String beanName, Object bean) throws IllegalAccessException, InstantiationException {
-        singletonMap.put(beanName, bean);
+        synchronized (singletonMap) {
+            singletonMap.put(beanName, bean);
+            removeEarlySingletonObjects(beanName);
+            removeSingletonFactories(beanName);
+        }
     }
 
     void registerEarlySingletonObjects(String beanName, Object bean) throws IllegalAccessException, InstantiationException {
