@@ -22,7 +22,7 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
         diScan(beanName, finalBean);
 
         // Aware 回调
-        if (bean instanceof BeanNameAware) {
+        if (finalBean instanceof BeanNameAware) {
             ((BeanNameAware) finalBean).setBeanName(beanDefinition.getBeanClass().getSimpleName());
         }
         List<BeanPostProcessor> beanPostProcessorList = getBeanPostProcessorList();
@@ -31,7 +31,7 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
             finalBean = beanPostProcessor.postProcessBeforeInitialization(finalBean, beanName);
         }
         // InitializeBean初始化
-        if (bean instanceof InitializingBean) {
+        if (finalBean instanceof InitializingBean) {
             ((InitializingBean) finalBean).afterPropertiesSet();
         }
         // BeanPostProcessList后置处理器
