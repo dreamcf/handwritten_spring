@@ -13,14 +13,15 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
     @Override
     protected Object createSingleton(String beanName, BeanDefinition beanDefinition) throws IllegalAccessException, InstantiationException {
         Object bean = beanDefinition.getBeanClass().newInstance();
-        diScan(bean);
+        diScan(beanName, bean);
         if (beanDefinition.getScope() != null && beanDefinition.getScope().equals("singleton")) {
             registerSingletonBean(beanName, bean);
         }
         return bean;
     }
 
-    private void diScan(Object bean) throws IllegalAccessException, InstantiationException {
+    private void diScan(String beanName, Object bean) throws IllegalAccessException, InstantiationException {
+        registerEarlySingletonObjects(beanName, bean);//放入二级缓存
         for (Field declaredField : bean.getClass().getDeclaredFields()) {
             if (declaredField.isAnnotationPresent(Autowired.class)) {
                 String autowiredBeanName = declaredField.getType().toString();
@@ -29,6 +30,7 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
                 declaredField.set(bean, autowiredBean);
             }
         }
+        removeEarlySingletonObjects(beanName);//删除二级缓存
     }
 
     @Override

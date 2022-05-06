@@ -4,6 +4,7 @@ import com.zhang.spring.annotation.Component;
 import com.zhang.spring.annotation.ComponentScan;
 import com.zhang.spring.bean.BeanDefinition;
 import com.zhang.spring.factory.BeanDefinitionFactory;
+import com.zhang.spring.factory.SingletonBeanFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class BeanDefinitionScan extends BeanDefinitionFactory {
         scan(configClass);
 
 //        for (Map.Entry<String, BeanDefinition> BeanDefinitionEntryMap : super.getBeanDefinitionMap().entrySet()) {
-//            if (BeanDefinitionEntryMap.getValue().getScope() != null && BeanDefinitionEntryMap.getValue().getScope().equals("singleton")) {
+//            if (BeanDefinitionEntryMap.getValue().getScope() != null && BeanDefinitionEntryMap.getValue().getScope().equals("singleton") && !SingletonBeanFactory.hasSingletonMap(BeanDefinitionEntryMap.getKey())) {
 //                createSingleton(BeanDefinitionEntryMap.getKey(), BeanDefinitionEntryMap.getValue());
 //            }
 //        }

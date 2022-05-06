@@ -6,7 +6,7 @@ import com.zhang.spring.annotation.Scope;
 
 @Scope
 @Component
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements  UserService {
     @Autowired
     private UserTest userTest;
 
@@ -14,4 +14,5 @@ public class UserServiceImpl implements UserService {
     public String todo() {
         return userTest.say();
     }
+
 }

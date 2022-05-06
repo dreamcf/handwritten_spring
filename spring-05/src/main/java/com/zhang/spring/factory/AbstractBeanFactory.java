@@ -10,8 +10,9 @@ public abstract class AbstractBeanFactory extends SingletonBeanFactory implement
     public Object getBean(String beanName) throws IllegalAccessException, InstantiationException {
         BeanDefinition beanDefinition = getBeanDefinition(beanName);
         if (beanDefinition == null) throw new NullPointerException();
-        if (beanDefinition.getScope() != null && beanDefinition.getScope().equals("singleton") && getSingletonBean(beanName) != null)
-            return getSingletonBean(beanName);
+        if (beanDefinition.getScope() != null && beanDefinition.getScope().equals("singleton") && hasSingletonCache(beanName) != null) {
+            return hasSingletonCache(beanName);
+        }
         return createSingleton(beanName, beanDefinition);
     }
 
