@@ -9,6 +9,9 @@ public abstract class AbstractBeanFactory extends SingletonBeanFactory implement
     @Override
     public Object getBean(String beanName) throws IllegalAccessException, InstantiationException {
         BeanDefinition beanDefinition = getBeanDefinition(beanName);
+        if (beanDefinition.getScope() != null && beanDefinition.getScope().equals("singleton") && getSingletonBean(beanName) != null) {
+            return getSingletonBean(beanName);
+        }
         return create(beanName, beanDefinition);
     }
 
