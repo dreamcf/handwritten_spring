@@ -1,26 +1,35 @@
 package com.zhang.spring.factory;
 
+
 import java.util.HashMap;
+import java.util.Map;
 
 public class SingletonBeanFactory {
-    private static HashMap<String, Object> singletonMap = new HashMap<>();
-    private final HashMap<String, Object> earlySingletonObjects = new HashMap<>();
+    //一级缓存
+    private static final Map<String, Object> singletonMap = new HashMap<>();
+    //二级缓存
+    private static final Map<String, Object> earlySingletonObjects = new HashMap<>();
+    //三级缓存
+    private static final Map<String, ProxyObjectFactory> singletonFactories = new HashMap<>();
 
     void registerSingletonBean(String beanName, Object bean) throws IllegalAccessException, InstantiationException {
-        singletonMap.put(beanName, bean);
+        synchronized (singletonMap) {
+            singletonMap.put(beanName, bean);
+            removeEarlySingletonObjects(beanName);
+            removeSingletonFactories(beanName);
+        }
     }
 
     void registerEarlySingletonObjects(String beanName, Object bean) throws IllegalAccessException, InstantiationException {
         earlySingletonObjects.put(beanName, bean);
     }
 
-    Object getSingletonBean(String beanName) {
-        Object o = singletonMap.get(beanName);
-        return o;
+    void registerSingletonFactories(String beanName, ProxyObjectFactory proxyObjectFactory) {
+        singletonFactories.put(beanName, proxyObjectFactory);
     }
 
-    Object getEarlySingletonObjects(String beanName) {
-        Object o = earlySingletonObjects.get(beanName);
+    Object getSingletonBean(String beanName) {
+        Object o = singletonMap.get(beanName);
         return o;
     }
 
@@ -29,11 +38,15 @@ public class SingletonBeanFactory {
     }
 
     void removeEarlySingletonObjects(String beanName) {
-        earlySingletonObjects.remove(beanName);
+        if (earlySingletonObjects.containsKey(beanName)) earlySingletonObjects.remove(beanName);
+    }
+
+    void removeSingletonFactories(String beanName) {
+        if (singletonFactories.containsKey(beanName)) singletonFactories.remove(beanName);
     }
 
     public Object hasSingletonCache(String beanName) {
-        return singletonMap.getOrDefault(beanName, earlySingletonObjects.getOrDefault(beanName, null));
+        return singletonMap.getOrDefault(beanName, earlySingletonObjects.getOrDefault(beanName, singletonFactories
+                .getOrDefault(beanName, null)));
     }
-
 }

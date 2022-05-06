@@ -4,7 +4,6 @@ package com.zhang.spring.aop.config;
 import java.lang.reflect.Method;
 
 public class AdvisedSupport {
-    //切面类
     private Class AspectClass;
     // 方法拦截器
     private Method methodInterceptor;
@@ -21,14 +20,23 @@ public class AdvisedSupport {
         return AspectClass;
     }
 
+    public void setAspectClass(Class aspectClass) {
+        AspectClass = aspectClass;
+    }
 
     public Method getMethodInterceptor() {
         return methodInterceptor;
     }
 
+    public void setMethodInterceptor(Method methodInterceptor) {
+        this.methodInterceptor = methodInterceptor;
+    }
 
     public MethodMatcher getMethodMatcher() {
         return methodMatcher;
     }
 
+    public void setMethodMatcher(MethodMatcher methodMatcher) {
+        this.methodMatcher = methodMatcher;
+    }
 }

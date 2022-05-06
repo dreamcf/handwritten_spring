@@ -1,8 +1,8 @@
 package com.zhang.spring.config;
 
-import com.zhang.spring.annotation.Component;
-import com.zhang.spring.annotation.ComponentScan;
-import com.zhang.spring.annotation.Configuration;
+import com.zhang.spring.annotation.*;
+import com.zhang.spring.aop.config.AdvisedSupport;
+import com.zhang.spring.aop.config.AspectJExpressionPointcut;
 import com.zhang.spring.bean.BeanDefinition;
 import com.zhang.spring.factory.BeanDefinitionFactory;
 import com.zhang.spring.factory.SingletonBeanFactory;
@@ -10,6 +10,7 @@ import com.zhang.spring.factory.SingletonBeanFactory;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Map;
 
@@ -23,8 +24,8 @@ public class BeanDefinitionScan extends BeanDefinitionFactory {
         scan(configClass);
 
 //        for (Map.Entry<String, BeanDefinition> BeanDefinitionEntryMap : super.getBeanDefinitionMap().entrySet()) {
-//            if (BeanDefinitionEntryMap.getValue().getScope() != null && BeanDefinitionEntryMap.getValue().getScope().equals("singleton") && !SingletonBeanFactory.hasSingletonMap(BeanDefinitionEntryMap.getKey())) {
-//                createSingleton(BeanDefinitionEntryMap.getKey(), BeanDefinitionEntryMap.getValue());
+//            if (BeanDefinitionEntryMap.getValue().getScope()!=null && BeanDefinitionEntryMap.getValue().getScope().equals("singleton") && !SingletonBeanFactory.hasSingletonMap(BeanDefinitionEntryMap.getKey())){
+//                createSingleton(BeanDefinitionEntryMap.getKey(),BeanDefinitionEntryMap.getValue());
 //            }
 //        }
     }
@@ -48,12 +49,30 @@ public class BeanDefinitionScan extends BeanDefinitionFactory {
                 String filePath = fileString.substring(fileString.lastIndexOf("com"), fileString.lastIndexOf(".class")).replace("\\", ".");
                 try {
                     Class<?> clazz = classLoader.loadClass(filePath);
-                    if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Configuration.class)) {
+                    if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Configuration.class)){
                         registerBeanDefinition(clazz);
-                        //todo 全局BeanPostProcess,存List
-                        if (BeanPostProcessor.class.isAssignableFrom(clazz)) {
+                        //全局BeanPostProcess,存List
+                        if(BeanPostProcessor.class.isAssignableFrom(clazz)){
                             BeanPostProcessor instance = (BeanPostProcessor) clazz.getDeclaredConstructor().newInstance();
                             addBeanPostProcessorList(instance);
+                        }
+                        //todo 切面类bean
+                        if(clazz.isAnnotationPresent(Aspect.class)){
+                            for (Method method : clazz.getDeclaredMethods()) {
+                                if(method.isAnnotationPresent(Pointcut.class)){
+                                    Pointcut pointcut = method.getDeclaredAnnotation(Pointcut.class);
+                                    AspectJExpressionPointcut aspectJExpressionPointcut = new AspectJExpressionPointcut(pointcut.value());
+                                    for (Method clazzMethod : clazz.getDeclaredMethods()) {
+                                        if(clazzMethod.isAnnotationPresent(Around.class)){
+                                            String methodName = method.toString().substring(method.toString().lastIndexOf('.') + 1);
+                                            if(methodName.equals(clazzMethod.getDeclaredAnnotation(Around.class).value())){
+                                                addAdvisedSupportList(new AdvisedSupport(clazz,clazzMethod,aspectJExpressionPointcut));
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {

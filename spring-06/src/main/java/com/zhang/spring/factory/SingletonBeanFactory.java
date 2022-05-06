@@ -19,20 +19,18 @@ public class SingletonBeanFactory {
         return o;
     }
 
-    public static boolean hasSingletonMap(String beanName) {
-        return singletonMap.containsKey(beanName);
-    }
-
-
     Object getEarlySingletonObjects(String beanName) {
         Object o = earlySingletonObjects.get(beanName);
         return o;
     }
 
+    public static boolean hasSingletonMap(String beanName) {
+        return singletonMap.containsKey(beanName);
+    }
+
     void removeEarlySingletonObjects(String beanName) {
         earlySingletonObjects.remove(beanName);
     }
-
 
     public Object hasSingletonCache(String beanName) {
         return singletonMap.getOrDefault(beanName, earlySingletonObjects.getOrDefault(beanName, null));

@@ -1,23 +1,32 @@
 package com.zhang.spring.aop;
 
 
-import com.zhang.spring.annotation.*;
+import com.zhang.spring.annotation.Around;
+import com.zhang.spring.annotation.Aspect;
+import com.zhang.spring.annotation.Component;
+import com.zhang.spring.annotation.Pointcut;
 import org.aopalliance.intercept.MethodInvocation;
 
-@Configuration
+@Component
 @Aspect
 public class AopAspectTest {
     @Pointcut("execution (public * com.zhang.spring.entry.UserServiceImpl.*(..))")
     public void apiMethod(){};
+
     @Around("apiMethod()")
     public Object api(MethodInvocation invocation) throws Throwable {
         System.out.println("方法执行前");
 
-        Object proceed = invocation.proceed();
+        Object proceed;
+        try {
+            return  invocation.proceed();
 
-        System.out.println("方法执行后");
 
-        return proceed;
+        } finally {
+            System.out.println("方法执行后");
+        }
+
+
     }
 
 }

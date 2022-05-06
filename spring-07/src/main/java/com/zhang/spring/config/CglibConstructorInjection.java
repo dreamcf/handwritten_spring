@@ -6,9 +6,9 @@ import net.sf.cglib.proxy.NoOp;
 
 import java.lang.reflect.Constructor;
 
-public class CglibConstructorInjection implements ConstructorInjection {
+public class CglibConstructorInjection implements ConstructorInjection  {
     @Override
-    public Object constructor(String beanName, BeanDefinition beanDefinition, Constructor cor, Object... args) throws Throwable {
+    public Object constructor(String beanName, BeanDefinition beanDefinition, Constructor cor, Object...args) throws Throwable {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(beanDefinition.getBeanClass());
         enhancer.setCallback(new NoOp() {
@@ -17,7 +17,7 @@ public class CglibConstructorInjection implements ConstructorInjection {
                 return super.hashCode();
             }
         });
-        if (cor == null) return enhancer.create();
-        return enhancer.create(cor.getParameterTypes(), args);
+        if(cor==null) return enhancer.create();
+        return enhancer.create(cor.getParameterTypes(),args);
     }
 }

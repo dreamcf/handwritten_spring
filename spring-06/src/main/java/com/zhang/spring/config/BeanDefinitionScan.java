@@ -2,12 +2,14 @@ package com.zhang.spring.config;
 
 import com.zhang.spring.annotation.Component;
 import com.zhang.spring.annotation.ComponentScan;
+import com.zhang.spring.annotation.Configuration;
 import com.zhang.spring.bean.BeanDefinition;
 import com.zhang.spring.factory.BeanDefinitionFactory;
 import com.zhang.spring.factory.SingletonBeanFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Map;
 
@@ -15,7 +17,7 @@ public class BeanDefinitionScan extends BeanDefinitionFactory {
     private Class configClass;
     private ClassLoader classLoader;
 
-    public BeanDefinitionScan(Class configClass) throws IOException, InstantiationException, IllegalAccessException {
+    public BeanDefinitionScan(Class configClass) throws Exception {
         this.configClass = configClass;
         classLoader = BeanDefinitionScan.class.getClassLoader();
         scan(configClass);
@@ -46,10 +48,17 @@ public class BeanDefinitionScan extends BeanDefinitionFactory {
                 String filePath = fileString.substring(fileString.lastIndexOf("com"), fileString.lastIndexOf(".class")).replace("\\", ".");
                 try {
                     Class<?> clazz = classLoader.loadClass(filePath);
-                    if (clazz.isAnnotationPresent(Component.class)) {
+                    if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Configuration.class)) {
                         registerBeanDefinition(clazz);
+                        //todo 全局BeanPostProcess,存List
+                        if (BeanPostProcessor.class.isAssignableFrom(clazz)) {
+                            BeanPostProcessor instance = (BeanPostProcessor) clazz.getDeclaredConstructor().newInstance();
+                            addBeanPostProcessorList(instance);
+                        }
                     }
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

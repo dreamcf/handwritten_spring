@@ -1,6 +1,7 @@
 package com.zhang.spring.factory;
 
 
+import com.zhang.spring.aop.config.AdvisedSupport;
 import com.zhang.spring.bean.BeanDefinition;
 
 import com.zhang.spring.config.BeanPostProcessor;
@@ -13,13 +14,16 @@ import java.util.List;
 import java.util.Map;
 
 public class BeanDefinitionFactory extends AbstractBeanCreatFactory {
-    private final Map<String, BeanDefinition> BeanDefinitionMap;
-    //todo BeanPostProcessList
-    private final List<BeanPostProcessor> BeanPostProcessorList;
+    private static Map<String, BeanDefinition> BeanDefinitionMap;
+    // BeanPostProcessList
+    private static List<BeanPostProcessor> BeanPostProcessorList;
+    //todo AdvisedSupportList
+    private static List<AdvisedSupport> AdvisedSupportList;
 
     public BeanDefinitionFactory() {
         BeanDefinitionMap = new HashMap<>();
         BeanPostProcessorList = new ArrayList<>();
+        AdvisedSupportList = new ArrayList<>();
     }
 
     public void registerBeanDefinition(Class beanClass) throws InstantiationException, IllegalAccessException {
@@ -37,7 +41,7 @@ public class BeanDefinitionFactory extends AbstractBeanCreatFactory {
     public BeanDefinition getBeanDefinition(String beanName) {
         return BeanDefinitionMap.get(beanName);
     }
-    //todo 实现AbstractBeanFactory抽象类对于BeanPostProcessList的方法
+    //实现AbstractBeanFactory抽象类对于BeanPostProcessList的方法
 
     public List<BeanPostProcessor> getBeanPostProcessorList() {
         return BeanPostProcessorList;
@@ -49,5 +53,13 @@ public class BeanDefinitionFactory extends AbstractBeanCreatFactory {
 
     public Map<String, BeanDefinition> getBeanDefinitionMap() {
         return BeanDefinitionMap;
+    }
+
+    public void addAdvisedSupportList(AdvisedSupport advisedSupport) {
+        AdvisedSupportList.add(advisedSupport);
+    }
+
+    public static List<AdvisedSupport> getAdvisedSupportList() {
+        return AdvisedSupportList;
     }
 }

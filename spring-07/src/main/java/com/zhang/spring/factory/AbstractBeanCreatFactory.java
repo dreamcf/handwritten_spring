@@ -14,21 +14,22 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
     @Override
     protected Object createSingleton(String beanName, BeanDefinition beanDefinition) throws Exception {
         Object bean = beanDefinition.getBeanClass().newInstance();
+        //依赖注入
         diScan(beanName, bean);
-        //todo Aware 回调
+        // Aware 回调
         if (bean instanceof BeanNameAware) {
             ((BeanNameAware) bean).setBeanName(beanDefinition.getBeanClass().getSimpleName());
         }
         List<BeanPostProcessor> beanPostProcessorList = getBeanPostProcessorList();
-        //todo BeanPostProcessList前置处理器
+        // BeanPostProcessList前置处理器
         for (BeanPostProcessor beanPostProcessor : beanPostProcessorList) {
             bean = beanPostProcessor.postProcessBeforeInitialization(bean, beanName);
         }
-        //todo InitializeBean初始化
+        // InitializeBean初始化
         if (bean instanceof InitializingBean) {
             ((InitializingBean) bean).afterPropertiesSet();
         }
-        //todo BeanPostProcessList后置处理器
+        // BeanPostProcessList后置处理器
         for (BeanPostProcessor beanPostProcessor : beanPostProcessorList) {
             bean = beanPostProcessor.postProcessAfterInitialization(bean, beanName);
         }

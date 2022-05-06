@@ -1,5 +1,4 @@
 package com.zhang.spring.bean;
-
 public class BeanDefinition {
     private Class beanClass;
     private String scope;

@@ -14,7 +14,11 @@ public abstract class AbstractBeanFactory extends SingletonBeanFactory implement
         BeanDefinition beanDefinition = getBeanDefinition(beanName);
         if (beanDefinition == null) throw new NullPointerException();
         if (beanDefinition.getScope() != null && beanDefinition.getScope().equals("singleton") && hasSingletonCache(beanName) != null) {
-            return hasSingletonCache(beanName);
+            Object o = hasSingletonCache(beanName);
+            if (o instanceof ProxyObjectFactory) {
+                return ((ProxyObjectFactory) o).getProxyObject();
+            }
+            return o;
         }
         return createSingleton(beanName, beanDefinition);
     }

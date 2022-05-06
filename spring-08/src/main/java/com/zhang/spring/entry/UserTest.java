@@ -14,6 +14,6 @@ public class UserTest {
     }
 
    public void test() throws Exception {
-       userService.todo();
+        userService.afterPropertiesSet();
     }
 }

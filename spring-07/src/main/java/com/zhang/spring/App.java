@@ -1,10 +1,11 @@
 package com.zhang.spring;
 
+import com.zhang.spring.annotation.ComponentScan;
+import com.zhang.spring.entry.User;
 import com.zhang.spring.entry.UserServiceImpl;
 
 import com.zhang.spring.entry.UserTest;
 import com.zhang.spring.config.BeanDefinitionScan;
-import com.zhang.spring.annotation.ComponentScan;
 import com.zhang.spring.factory.BeanDefinitionFactory;
 
 /**
@@ -17,8 +18,9 @@ public class App {
     public static void main(String[] args) throws Throwable {
         BeanDefinitionFactory beanDefinitionFactory = new BeanDefinitionScan(App.class);
         UserServiceImpl userServiceImpl = (UserServiceImpl) beanDefinitionFactory.getBean("UserServiceImpl");
-        UserTest userServiceImpl1 = (UserTest) beanDefinitionFactory.getBean("UserTest");
-        System.out.println(userServiceImpl.equals(userServiceImpl1));
-        System.out.println(userServiceImpl.todo());
+        UserTest userTest = (UserTest) beanDefinitionFactory.getBean("UserTest");
+        User userTest1 = (User) beanDefinitionFactory.getBean("User");
+        userServiceImpl.afterPropertiesSet();
+        userTest.test();
     }
 }

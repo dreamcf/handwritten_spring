@@ -1,26 +1,44 @@
 package com.zhang.spring.factory;
 
-import com.zhang.spring.bean.BeanDefinition;
 import com.zhang.spring.annotation.Autowired;
-import com.zhang.spring.config.CglibConstructorInjection;
+import com.zhang.spring.bean.BeanDefinition;
+import com.zhang.spring.config.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.util.List;
 
 public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
     private CglibConstructorInjection cglibConstructorInjection = new CglibConstructorInjection();
 
     @Override
-    protected Object createSingleton(String beanName, BeanDefinition beanDefinition) throws IllegalAccessException, InstantiationException {
+    protected Object createSingleton(String beanName, BeanDefinition beanDefinition) throws Exception {
         Object bean = beanDefinition.getBeanClass().newInstance();
         diScan(beanName, bean);
+        //todo Aware 回调
+        if (bean instanceof BeanNameAware) {
+            ((BeanNameAware) bean).setBeanName(beanDefinition.getBeanClass().getSimpleName());
+        }
+        List<BeanPostProcessor> beanPostProcessorList = getBeanPostProcessorList();
+        //todo BeanPostProcessList前置处理器
+        for (BeanPostProcessor beanPostProcessor : beanPostProcessorList) {
+            bean = beanPostProcessor.postProcessBeforeInitialization(bean, beanName);
+        }
+        //todo InitializeBean初始化
+        if (bean instanceof InitializingBean) {
+            ((InitializingBean) bean).afterPropertiesSet();
+        }
+        //todo BeanPostProcessList后置处理器
+        for (BeanPostProcessor beanPostProcessor : beanPostProcessorList) {
+            bean = beanPostProcessor.postProcessAfterInitialization(bean, beanName);
+        }
         if (beanDefinition.getScope() != null && beanDefinition.getScope().equals("singleton")) {
             registerSingletonBean(beanName, bean);
         }
         return bean;
     }
 
-    private void diScan(String beanName, Object bean) throws IllegalAccessException, InstantiationException {
+    private void diScan(String beanName, Object bean) throws Exception {
         registerEarlySingletonObjects(beanName, bean);//放入二级缓存
         for (Field declaredField : bean.getClass().getDeclaredFields()) {
             if (declaredField.isAnnotationPresent(Autowired.class)) {

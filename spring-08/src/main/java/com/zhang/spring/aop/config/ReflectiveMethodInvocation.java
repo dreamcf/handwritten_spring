@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 
 
 public class ReflectiveMethodInvocation implements MethodInvocation {
+
     // 目标对象
     protected final Object target;
     // 方法
@@ -44,4 +45,5 @@ public class ReflectiveMethodInvocation implements MethodInvocation {
     public AccessibleObject getStaticPart() {
         return method;
     }
+
 }

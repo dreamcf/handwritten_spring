@@ -19,8 +19,8 @@ public class App {
         BeanDefinitionFactory beanDefinitionFactory = new BeanDefinitionScan(App.class);
         UserServiceImpl userServiceImpl = (UserServiceImpl) beanDefinitionFactory.getBean("UserServiceImpl");
         UserTest userTest = (UserTest) beanDefinitionFactory.getBean("UserTest");
-        User userTest1 = (User) beanDefinitionFactory.getBean("User");
-        userServiceImpl.afterPropertiesSet();
+        User users = (User) beanDefinitionFactory.getBean("User");
+        userServiceImpl.todo();
         userTest.test();
     }
 }

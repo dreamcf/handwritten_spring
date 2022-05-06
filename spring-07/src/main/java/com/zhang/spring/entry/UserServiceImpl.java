@@ -13,9 +13,12 @@ public class UserServiceImpl implements UserService, BeanNameAware , Initializin
     @Autowired
     private UserTest userTest;
 
+    @Autowired
+    public   User user;
     @Override
     public String todo() {
-        return userTest.say();
+        System.out.println("todo");
+        return "todo";
     }
 
     @Override

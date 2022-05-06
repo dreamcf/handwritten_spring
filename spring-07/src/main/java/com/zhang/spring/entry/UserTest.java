@@ -9,7 +9,11 @@ import com.zhang.spring.annotation.Scope;
 public class UserTest {
     @Autowired
     private UserServiceImpl userService;
-    String say(){
+   public String say(){
         return "我已经被填充";
+    }
+
+   public void test() throws Exception {
+       userService.todo();
     }
 }

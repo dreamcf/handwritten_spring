@@ -1,24 +1,26 @@
 package com.zhang.spring.entry;
 
-import com.zhang.spring.annotation.Autowired;
-import com.zhang.spring.annotation.Component;
-import com.zhang.spring.annotation.Scope;
+import com.zhang.spring.annotation.*;
 import com.zhang.spring.config.*;
 
 @Scope
 @Component
-public class UserServiceImpl implements UserService, BeanNameAware , InitializingBean {
+@PointClass
+public class UserServiceImpl implements UserService, BeanNameAware, InitializingBean {
 
 
     @Autowired
-    private UserTest userTest;
+    public UserTest userTest;
 
     @Autowired
-    public   User user;
+    public User user;
+
+    public String name;
+
     @Override
     public String todo() {
-        System.out.println("todo");
-        return "todo";
+        System.out.println("userTest");
+        return "test";
     }
 
     @Override
@@ -28,6 +30,7 @@ public class UserServiceImpl implements UserService, BeanNameAware , Initializin
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        name = "zcf";
         System.out.println("初始化，我可以填充普通数据");
     }
 }

@@ -14,6 +14,8 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
     @Override
     protected Object createSingleton(String beanName, BeanDefinition beanDefinition) throws Exception {
         Object bean = beanDefinition.getBeanClass().newInstance();
+        ProxyObjectFactory proxyObjectFactory = new ProxyObjectFactory(beanName, bean);
+        registerSingletonFactories(beanName, proxyObjectFactory);//放入三级缓存
         //依赖注入
         diScan(beanName, bean);
         // Aware 回调
@@ -33,6 +35,8 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
         for (BeanPostProcessor beanPostProcessor : beanPostProcessorList) {
             bean = beanPostProcessor.postProcessAfterInitialization(bean, beanName);
         }
+        removeEarlySingletonObjects(beanName);//删除二级缓存
+        bean = proxyObjectFactory.getBean();
         if (beanDefinition.getScope() != null && beanDefinition.getScope().equals("singleton")) {
             registerSingletonBean(beanName, bean);
         }
@@ -40,16 +44,20 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
     }
 
     private void diScan(String beanName, Object bean) throws Exception {
-        registerEarlySingletonObjects(beanName, bean);//放入二级缓存
         for (Field declaredField : bean.getClass().getDeclaredFields()) {
             if (declaredField.isAnnotationPresent(Autowired.class)) {
                 String autowiredBeanName = declaredField.getType().toString();
                 Object autowiredBean = getBean(autowiredBeanName.substring(autowiredBeanName.lastIndexOf(".") + 1));
                 declaredField.setAccessible(true);
                 declaredField.set(bean, autowiredBean);
+//                removeSingletonFactories(autowiredBeanName.substring(autowiredBeanName.lastIndexOf('.')+1));//删除三级缓存
+                registerEarlySingletonObjects(autowiredBeanName.substring(autowiredBeanName.lastIndexOf('.')+1), autowiredBean);//放入二级缓存
             }
         }
-        removeEarlySingletonObjects(beanName);//删除二级缓存
+//        removeSingletonFactories(beanName);//删除三级缓存
+        registerEarlySingletonObjects(beanName, bean);//放入二级缓存
+
+
     }
 
     @Override

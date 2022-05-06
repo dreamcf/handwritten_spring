@@ -9,4 +9,7 @@ import com.zhang.spring.annotation.Scope;
 public class User {
     @Autowired
     private UserServiceImpl userService;
+    public void test(){
+        userService.todo();
+    }
 }
