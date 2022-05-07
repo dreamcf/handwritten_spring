@@ -37,6 +37,9 @@ public  class BeanDefinitionFactory extends  AbstractBeanCreatFactory{
             BeanDefinitionMap.put(beanClass.getSimpleName(),beanDefinition);
         }
     }
+
+
+
     public BeanDefinition getBeanDefinition(String beanName){
         return  BeanDefinitionMap.get(beanName);
     }

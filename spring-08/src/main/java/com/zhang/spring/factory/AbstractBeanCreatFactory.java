@@ -15,6 +15,7 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
     protected Object createSingleton(String beanName, BeanDefinition beanDefinition) throws Exception {
         Object bean = beanDefinition.getBeanClass().newInstance();
         ProxyObjectFactory proxyObjectFactory = new ProxyObjectFactory(beanName, bean);
+
         registerSingletonFactories(beanName, proxyObjectFactory);//放入三级缓存
         //依赖注入
         diScan(beanName, bean);
@@ -36,11 +37,11 @@ public abstract class AbstractBeanCreatFactory extends AbstractBeanFactory {
             bean = beanPostProcessor.postProcessAfterInitialization(bean, beanName);
         }
         removeEarlySingletonObjects(beanName);//删除二级缓存
-        bean = proxyObjectFactory.getBean();
+        Object finalBean = proxyObjectFactory.getBean();
         if (beanDefinition.getScope() != null && beanDefinition.getScope().equals("singleton")) {
-            registerSingletonBean(beanName, bean);
+            registerSingletonBean(beanName, finalBean);
         }
-        return bean;
+        return finalBean;
     }
 
     private void diScan(String beanName, Object bean) throws Exception {
